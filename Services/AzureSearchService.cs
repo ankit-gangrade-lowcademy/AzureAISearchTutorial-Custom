@@ -41,9 +41,9 @@ internal class AzureSearchService
 
     // ── Delete all chunks for a document_id ───────────────────────────────────
 
-    public int DeleteByDocumentId(AzureSearchConfig config, long documentId)
+    public int DeleteByDocumentId(AzureSearchConfig config, long documentId, long tenantId)
     {
-        var ids     = FetchAllIdsByDocumentId(config, documentId);
+        var ids     = FetchAllIdsByDocumentId(config, documentId, tenantId);
         int deleted = 0;
 
         foreach (var batch in Batch(ids, BatchSize))
@@ -137,7 +137,7 @@ internal class AzureSearchService
 
     // ── Fetch all IDs for a document_id (handles pagination) ─────────────────
 
-    private List<string> FetchAllIdsByDocumentId(AzureSearchConfig config, long documentId)
+    private List<string> FetchAllIdsByDocumentId(AzureSearchConfig config, long documentId, long tenantId)
     {
         var ids  = new List<string>();
         int skip = 0;
@@ -147,7 +147,7 @@ internal class AzureSearchService
             var requestBody = JsonSerializer.Serialize(new
             {
                 search = "*",
-                filter = $"document_id eq {documentId}L",
+                filter = $"document_id eq {documentId}L and tenant_id eq {tenantId}L",
                 select = "id",
                 top    = MaxPageSize,
                 skip,

@@ -155,8 +155,14 @@ public interface IAzureAISearch
         string AzureIndexName,
 
         [OSParameter(DataType = OSDataType.LongInteger,
+            Description = "A Long Integer that identifies the tenant. Only chunks matching BOTH this Tenant_Id AND the Document_Id are deleted. " +
+                          "Ensures cross-tenant isolation — documents belonging to other tenants are never affected. " +
+                          "Pass the Id of the relevant Tenant entity from your OutSystems database.")]
+        long TenantId,
+
+        [OSParameter(DataType = OSDataType.LongInteger,
             Description = "A Long Integer that uniquely identifies the document whose chunks should be deleted. " +
-                          "All index entries with a matching document_id field will be permanently removed. " +
+                          "All index entries matching both this Document_Id and the Tenant_Id are permanently removed, including any stored embedding vectors. " +
                           "Pass the Id of the document entity from your OutSystems database.")]
         long DocumentId,
 

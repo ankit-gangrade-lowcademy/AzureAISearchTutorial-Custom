@@ -52,7 +52,7 @@ public class AzureAISearchImpl : IAzureAISearch
             if (rawChunks.Count == 0)
                 throw new InvalidOperationException("No text could be extracted from the PDF. Ensure the PDF contains selectable text (not scanned images).");
 
-            _searchService.DeleteByDocumentId(config, DocumentId);
+            _searchService.DeleteByDocumentId(config, DocumentId, TenantId);
 
             var documents = rawChunks.Select(c => new DocumentChunk
             {
@@ -89,6 +89,7 @@ public class AzureAISearchImpl : IAzureAISearch
         string     AzureEndpoint,
         string     AzureAdminKey,
         string     AzureIndexName,
+        long       TenantId,
         long       DocumentId,
         out bool   IsSuccess,
         out string Message,
@@ -110,10 +111,10 @@ public class AzureAISearchImpl : IAzureAISearch
                 IndexName       = AzureIndexName,
             };
 
-            TotalChunksDeleted = _searchService.DeleteByDocumentId(config, DocumentId);
+            TotalChunksDeleted = _searchService.DeleteByDocumentId(config, DocumentId, TenantId);
 
             IsSuccess = true;
-            Message   = $"Successfully deleted {TotalChunksDeleted} chunks for Document_Id '{DocumentId}'.";
+            Message   = $"Successfully deleted {TotalChunksDeleted} chunks for Document_Id '{DocumentId}' and Tenant_Id '{TenantId}'.";
         }
         catch (ArgumentException ex)
         {

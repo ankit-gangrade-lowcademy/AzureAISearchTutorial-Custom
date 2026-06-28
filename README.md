@@ -226,7 +226,8 @@ Permanently deletes all chunks for a given `DocumentId` from the index, includin
 | `AzureEndpoint` | Text | `https://<name>.search.windows.net` |
 | `AzureAdminKey` | Text | Admin key from Azure Portal |
 | `AzureIndexName` | Text | Name of the search index |
-| `DocumentId` | LongInteger | All chunks with this ID are deleted |
+| `TenantId` | LongInteger | Only chunks matching this tenant are deleted |
+| `DocumentId` | LongInteger | All chunks matching both this ID and `TenantId` are deleted |
 | *(out)* `IsSuccess` | Boolean | |
 | *(out)* `Message` | Text | |
 | *(out)* `TotalChunksDeleted` | Integer | |

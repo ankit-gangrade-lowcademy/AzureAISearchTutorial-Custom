@@ -21,25 +21,7 @@ if (performEmbedding)
     azureOpenAIEndpoint  = Prompt("Azure OpenAI Endpoint (https://<name>.openai.azure.com  OR  https://<name>.cognitiveservices.azure.com)");
     azureOpenAIKey       = Prompt("Azure OpenAI Key");
 
-    // List deployments on this resource so the user can confirm the exact deployment name
-    Console.WriteLine("\n  Checking available deployments on the endpoint...");
-    try
-    {
-        var embSvc = new AzureAISearchTutorialCompanion.Services.EmbeddingService();
-        var deps = embSvc.ListDeployments(azureOpenAIEndpoint, azureOpenAIKey);
-        if (deps.Count == 0)
-            Console.WriteLine("  (no deployments found — verify endpoint and key)");
-        else
-            foreach (var (dname, dmodel, dstatus) in deps)
-                Console.WriteLine($"    Name: {dname,-40}  Model: {dmodel,-35}  Status: {dstatus}");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"  Could not list deployments: {ex.Message}");
-    }
-    Console.WriteLine();
-
-    embeddingDeployment  = Prompt("Embedding Deployment Name (copy the exact Name from the list above)");
+    embeddingDeployment  = Prompt("Embedding Deployment Name");
 }
 
 // ── Document identity ─────────────────────────────────────────────────────────
@@ -141,6 +123,7 @@ impl.Delete_Document(
     AzureEndpoint:      azureEndpoint,
     AzureAdminKey:      azureAdminKey,
     AzureIndexName:     azureIndexName,
+    TenantId:           tenantId,
     DocumentId:         documentId,
     IsSuccess:          out bool deleteSuccess,
     Message:            out string deleteMessage,
