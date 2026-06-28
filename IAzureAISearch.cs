@@ -7,7 +7,6 @@ namespace AzureAISearchTutorialCompanion;
     IconResourceName = "AzureAISearchTutorialCompanion.icon.png",
     Description = "Azure AI Search Tutorial Custom is a learning-focused project for OutSystems developers to understand Azure AI Search and Retrieval-Augmented Generation (RAG). " +
                   "It is an enhanced version of the AzureAISearchTutorial project that guides you through setting up your own Azure environment, including Azure AI Search, Azure OpenAI, model deployments, embeddings, indexes, and related resources. " +
-                  "The project also demonstrates how to use APIs to index, search, and manage document chunks in Azure AI Search.\n\n" +
                   "Connect your own Azure AI Search service to OutSystems ODC. " +
                   "Pass your Azure credentials directly — no shared sandbox, no third-party broker. " +
                   "Supports chunking PDF documents, generating embeddings via Azure OpenAI, indexing content with " +
