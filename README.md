@@ -42,6 +42,120 @@ Create an index with the following fields:
 
 > **Important:** `tenant_id` and `document_id` must be marked **Filterable**. Add a **vectorSearch** configuration (HNSW algorithm) and a **semantic configuration** named `default` on the index.
 
+> ⚠️ **This library is built for the exact index structure below. If you use a different field name, type, or attribute, the library will not work correctly and code changes will be required.**
+
+#### Exact Index JSON (use this when creating the index via Azure Portal → JSON editor or REST API)
+
+```json
+{
+  "name": "ai-search-index",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Edm.String",
+      "key": true,
+      "searchable": false,
+      "filterable": false,
+      "retrievable": true,
+      "stored": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "tenant_id",
+      "type": "Edm.Int64",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "stored": true,
+      "sortable": true,
+      "facetable": false
+    },
+    {
+      "name": "document_id",
+      "type": "Edm.Int64",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "stored": true,
+      "sortable": true,
+      "facetable": false
+    },
+    {
+      "name": "sourceName",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": true,
+      "retrievable": true,
+      "stored": true,
+      "sortable": true,
+      "facetable": false
+    },
+    {
+      "name": "section",
+      "type": "Edm.String",
+      "searchable": false,
+      "filterable": false,
+      "retrievable": true,
+      "stored": true,
+      "sortable": false,
+      "facetable": false
+    },
+    {
+      "name": "content",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": true,
+      "stored": true,
+      "sortable": false,
+      "facetable": false,
+      "analyzer": "standard.lucene"
+    },
+    {
+      "name": "embedding",
+      "type": "Collection(Edm.Single)",
+      "searchable": true,
+      "filterable": false,
+      "retrievable": false,
+      "stored": true,
+      "sortable": false,
+      "facetable": false,
+      "dimensions": 1536,
+      "vectorSearchProfile": "hnsw-profile"
+    }
+  ],
+  "vectorSearch": {
+    "algorithms": [
+      {
+        "name": "hnsw-algorithm",
+        "kind": "hnsw"
+      }
+    ],
+    "profiles": [
+      {
+        "name": "hnsw-profile",
+        "algorithm": "hnsw-algorithm"
+      }
+    ]
+  },
+  "semantic": {
+    "configurations": [
+      {
+        "name": "default",
+        "prioritizedFields": {
+          "contentFields": [
+            { "fieldName": "content" }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+> **Note on `dimensions`:** Set `1536` for `text-embedding-3-small` and `text-embedding-ada-002`, or `3072` for `text-embedding-3-large`. This must match the model you deploy in Azure OpenAI.
+
 ### 3. Azure OpenAI Resource *(optional — required for vector search)*
 1. Go to [portal.azure.com](https://portal.azure.com) → Create a resource → **Azure OpenAI**
 2. After creation, go to **Keys and Endpoint** → copy the **Endpoint** and **KEY 1**
