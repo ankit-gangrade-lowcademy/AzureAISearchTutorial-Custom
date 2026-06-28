@@ -1,0 +1,19 @@
+# Build output
+bin/
+obj/
+
+# Publish artifacts
+publish/
+publish-output/
+
+# Test / scratch files
+file.pdf
+*.zip
+
+# macOS
+.DS_Store
+
+# Rider / VS
+.idea/
+.vs/
+*.user
