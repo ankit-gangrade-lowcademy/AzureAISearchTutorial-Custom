@@ -23,14 +23,14 @@ namespace AzureAISearchTutorialCompanion;
                   "4. An Azure OpenAI resource with an embedding model deployment (e.g. text-embedding-3-small).\n" +
                   "5. Your Search service Endpoint URL, Admin Key, and Index Name — all available in the Azure Portal.\n\n" +
                   "── About the Author ──────────────────────────────────────────────\n" +
-                  "Ankit Gangrade is an Enterprise OutSystems Architect, AI & Low-Code Architect, and the founder of XaltiQ Technologies. " +
+                  "Ankit Gangrade is an Enterprise OutSystems Architect, AI & Low-Code Architect. " +
                   "He is also the creator of Lowcademy, a learning platform focused on helping developers master Low-Code development " +
                   "through practical tutorials, real-world projects, and hands-on learning.\n\n" +
                   "Connect with Ankit:\n" +
-                  "  Website   : https://ankitg.in\n" +
-                  "  LinkedIn  : https://linkedin.com/in/ankitgangrade\n" +
-                  "  YouTube   : https://youtube.com/@SimplifyWithAnkit\n" +
-                  "  Lowcademy : https://lowcademy.com"
+                  "  https://ankitg.in\n" +
+                  "  https://linkedin.com/in/ankitgangrade\n" +
+                  "  https://youtube.com/@lowcademy\n" +
+                  "  https://lowcademy.com"
 )]
 public interface IAzureAISearch
 {
@@ -248,13 +248,12 @@ public interface IAzureAISearch
         int ReturnTopNChunks,
 
         [OSParameter(DataType = OSDataType.Decimal,
-            Description = "Minimum relevance score (0.0 – 1.0) a chunk must achieve to appear in the results. " +
-                          "Chunks that score below this threshold are silently excluded. Default: 0.55. " +
-                          "For vector search (PerformEmbedding=True), the score represents cosine similarity between the query and the chunk — " +
-                          "0.55 filters out clearly irrelevant chunks while keeping moderately relevant ones. " +
-                          "For semantic/text search (PerformEmbedding=False), the score is the semantic reranker confidence normalised to 0–1. " +
-                          "Set to 0.0 to disable filtering and return all top-N results regardless of score. " +
-                          "Increase toward 1.0 to return only highly relevant chunks; decrease toward 0.0 to be more permissive.")]
+            Description = "Minimum relevance score a chunk must achieve to appear in the results. Chunks that score below this threshold are silently excluded. Default: 1.5. " +
+                          "This library always applies Azure AI semantic reranking, so the returned score is the semantic reranker confidence score (0–4) on Basic tier or above — " +
+                          "this applies to BOTH text search (PerformEmbedding=False) and vector search (PerformEmbedding=True), since vector candidates are also reranked. " +
+                          "Score guide: 1.0 = low relevance, 2.0 = moderate, 3.0 = good, 4.0 = maximum. Recommended starting value: 1.5. " +
+                          "On Free tier (semantic search not supported): falls back to base BM25 or RRF-fused score with no fixed upper bound; recommended value: 0.3–0.7. " +
+                          "Set to 0.0 to disable filtering and return all top-N results regardless of score.")]
         double MinimumRelevanceScore,
 
         [OSParameter(DataType = OSDataType.Boolean,
@@ -271,7 +270,7 @@ public interface IAzureAISearch
             Description = "JSON array of the top-N chunks that passed the MinimumRelevanceScore threshold, ordered by relevance (highest score first). " +
                           "Each element is an object with two fields:\n" +
                           "  content        (Text)    — the raw text of the chunk; pass directly to your AI model as RAG context.\n" +
-                          "  relevanceScore (Decimal) — relevance score rounded to 4 decimal places (0.0 – 1.0; higher is more relevant).\n" +
+                          "  relevanceScore (Decimal) — semantic reranker confidence score, rounded to 4 decimal places. Range is 0–4 (Basic tier+); higher is more relevant.\n" +
                           "Returns [] if no chunks meet the minimum score or no results were found.\n" +
                           "Example: [{\"content\":\"Azure AI Search supports...\",\"relevanceScore\":0.8213},{\"content\":\"To create an index...\",\"relevanceScore\":0.7541}]")]
         out string JSON

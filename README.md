@@ -248,7 +248,7 @@ Searches the index and returns the top-N most relevant chunks for the given tena
 | `TenantId` | LongInteger | Only chunks with this `tenant_id` are returned |
 | `SearchQuery` | Text | Natural-language question or keyword phrase |
 | `ReturnTopNChunks` | Integer | Max chunks to retrieve before score filtering (recommended: 5–10) |
-| `MinimumRelevanceScore` | Decimal | Score threshold 0.0–1.0 (default `0.55`). Set to `0.0` to disable filtering |
+| `MinimumRelevanceScore` | Decimal | Score threshold (default `1.5`). Both text and vector search use the Azure AI semantic reranker score (**0–4** on Basic tier+). Set to `0.0` to disable filtering |
 | *(out)* `IsSuccess` | Boolean | |
 | *(out)* `Message` | Text | |
 | *(out)* `JSON` | Text | JSON array of results (see below) |
@@ -267,6 +267,8 @@ Searches the index and returns the top-N most relevant chunks for the given tena
 ]
 ```
 Pass `content` values directly to your AI model as RAG context.
+
+> **Score ranges:** This library always applies Azure AI semantic reranking, so `relevanceScore` is the semantic reranker confidence score (**0–4**) for **both** `PerformEmbedding=True` (vector + reranking) and `PerformEmbedding=False` (text + reranking). Score guide: 1.0 = low, 2.0 = moderate, 3.0 = good, 4.0 = maximum. On the Free tier (no semantic search), scores fall back to base BM25/RRF values with no fixed upper bound. Recommended starting threshold: **1.5**.
 
 ---
 

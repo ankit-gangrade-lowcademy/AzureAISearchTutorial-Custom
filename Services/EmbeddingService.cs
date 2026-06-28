@@ -13,7 +13,7 @@ internal class EmbeddingService
         var url     = $"{endpoint.TrimEnd('/')}/openai/deployments/{deploymentName}/embeddings?api-version={ApiVersion}";
         var payload = JsonSerializer.Serialize(new { input = text });
 
-        using var client = new HttpClient();
+        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
         client.DefaultRequestHeaders.Add("api-key", apiKey);
 
         var content  = new StringContent(payload, Encoding.UTF8, "application/json");
@@ -36,7 +36,7 @@ internal class EmbeddingService
     public List<(string Name, string Model, string Status)> ListDeployments(string endpoint, string apiKey)
     {
         var url = $"{endpoint.TrimEnd('/')}/openai/deployments?api-version={ApiVersion}";
-        using var client = new HttpClient();
+        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
         client.DefaultRequestHeaders.Add("api-key", apiKey);
         var response = client.GetAsync(url).GetAwaiter().GetResult();
         var body     = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();

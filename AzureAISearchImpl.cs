@@ -156,8 +156,8 @@ public class AzureAISearchImpl : IAzureAISearch
                 throw new ArgumentException("SearchQuery cannot be empty.");
             if (ReturnTopNChunks <= 0)
                 throw new ArgumentException("ReturnTopNChunks must be greater than 0.");
-            if (MinimumRelevanceScore < 0 || MinimumRelevanceScore > 1)
-                throw new ArgumentException("MinimumRelevanceScore must be between 0.0 and 1.0.");
+            if (MinimumRelevanceScore < 0)
+                throw new ArgumentException("MinimumRelevanceScore cannot be negative.");
 
             var config = new AzureSearchConfig
             {

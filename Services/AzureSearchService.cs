@@ -183,7 +183,7 @@ internal class AzureSearchService
     {
         var url = $"{config.Endpoint.TrimEnd('/')}/indexes/{config.IndexName}/{path}?api-version={ApiVersion}";
 
-        using var client = new HttpClient();
+        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
         var apiKey       = useAdminKey ? config.PrimaryAdminKey : config.QueryKey;
         client.DefaultRequestHeaders.Add("api-key", apiKey);
 

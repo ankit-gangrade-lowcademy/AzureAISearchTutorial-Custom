@@ -100,7 +100,7 @@ if (!indexSuccess)
 Banner("STEP 2 — Search_Document");
 string searchQuery   = Prompt("Enter search query");
 int    topN          = PromptInt("How many top chunks to retrieve?", defaultValue: 5);
-double minScore      = PromptDouble("Minimum relevance score (0.0 – 1.0)", defaultValue: 0.55);
+double minScore      = PromptDouble("Minimum relevance score (0.0 – 4.0 for semantic; base score on Free tier)", defaultValue: 1.5);
 
 impl.Search_Document(
     AzureEndpoint:            azureEndpoint,
